@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Transaction Dashboard</title>
+
+<style>
+body{
+    font-family:'Segoe UI', Tahoma, sans-serif;
+    background:#eef2f7;
+    margin:0;
+}
+
+/* Header */
+.header{
+    background:#1e2a38;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logout{
+    background:#ff6b6b;
+    padding:8px 15px;
+    border:none;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.logout:hover{
+    background:#e03131;
+}
+
+/* Container */
+.container{
+    padding:20px;
+}
+
+/* Controls */
+.controls{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+input, select{
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    transition:0.2s;
+}
+
+input:focus, select:focus{
+    border-color:#4e73df;
+    box-shadow:0 0 5px rgba(78,115,223,0.3);
+}
+
+/* Cards */
+.cards{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.card{
+    flex:1;
+    min-width:200px;
+    padding:20px;
+    border-radius:15px;
+    color:white;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.total{background:linear-gradient(135deg,#5a8dee,#3b5bdb);}
+.fraud{background:linear-gradient(135deg,#ff6b6b,#e03131);}
+.safe{background:linear-gradient(135deg,#38d9a9,#20c997);}
+
+/* Table */
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    background:white;
+    border-radius:10px;
+    border-collapse:collapse;
+    box-shadow:0 5px 10px rgba(0,0,0,0.05);
+}
+
+th,td{
+    padding:12px;
+    text-align:center;
+}
+
+th{
+    background:#2f3e4e;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f9f9f9;
+}
+
+tr:hover{
+    background:#e7edff;
+}
+
+/* Badges */
+.badge{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-fraud{
+    background:#ffe3e3;
+    color:#c92a2a;
+}
+
+.badge-safe{
+    background:#e6fcf5;
+    color:#099268;
+}
+
+/* Empty */
+.empty{
+    text-align:center;
+    padding:20px;
+    color:#888;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .cards{
+        flex-direction:column;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h2>💳 Transaction Dashboard</h2>
+    <button class="logout">Logout</button>
+</div>
+
+<div class="container">
+
+<!-- Controls -->
+<div class="controls">
+    <input type="text" placeholder="Search user...">
+    
+    <select>
+        <option>All</option>
+        <option>Fraud</option>
+        <option>Safe</option>
+    </select>
+</div>
+
+<!-- Cards -->
+<div class="cards">
+
+<div class="card total">
+<h3>Total Transactions</h3>
+<h2>{{ total_transactions }}</h2>
+</div>
+
+<div class="card fraud">
+<h3>Fraud Transactions</h3>
+<h2>{{ fraud_count }}</h2>
+</div>
+
+<div class="card safe">
+<h3>Safe Transactions</h3>
+<h2>{{ safe_count }}</h2>
+</div>
+
+</div>
+
+<!-- Table -->
+<div class="table-container">
+<table>
+
+<tr>
+<th>User</th>
+<th>Amount</th>
+<th>Type</th>
+<th>Location</th>
+<th>Status</th>
+</tr>
+
+{% if transactions %}
+
+{% for transaction in transactions %}
+
+<tr>
+<td>{{ transaction.user_name }}</td>
+<td>₹ {{ transaction.amount }}</td>
+<td>{{ transaction.transaction_type }}</td>
+<td>{{ transaction.location }}</td>
+
+<td>
+{% if transaction.is_fraud %}
+<span class="badge badge-fraud">Fraud</span>
+{% else %}
+<span class="badge badge-safe">Safe</span>
+{% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+<tr>
+<td colspan="5" class="empty">No transactions found</td>
+</tr>
+{% endif %}
+
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

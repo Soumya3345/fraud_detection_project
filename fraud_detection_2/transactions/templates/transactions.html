@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef2f7;
+}
+
+/* Sidebar */
+.sidebar{
+    width:200px;
+    height:100vh;
+    position:fixed;
+    background:#2c3e50;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+}
+
+.sidebar a{
+    display:block;
+    padding:10px;
+    color:#ddd;
+    text-decoration:none;
+}
+
+.sidebar a:hover{
+    background:#4e73df;
+    color:white;
+}
+
+/* Main */
+.main{
+    margin-left:200px;
+    padding:20px;
+}
+
+/* Navbar */
+.top{
+    display:flex;
+    justify-content:space-between;
+}
+
+input{
+    padding:6px;
+}
+
+button{
+    padding:6px 10px;
+    background:red;
+    color:white;
+    border:none;
+}
+
+/* Cards */
+.cards{
+    display:flex;
+    gap:10px;
+    margin:20px 0;
+}
+
+.card{
+    flex:1;
+    padding:15px;
+    color:white;
+    text-align:center;
+    border-radius:10px;
+}
+
+.total{background:#4e73df;}
+.fraud{background:#e74a3b;}
+.safe{background:#1cc88a;}
+
+/* Chart */
+.chart{
+    background:white;
+    padding:15px;
+    width:300px;
+    border-radius:10px;
+}
+
+/* Table */
+table{
+    width:100%;
+    background:white;
+    margin-top:20px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#34495e;
+    color:white;
+    padding:8px;
+}
+
+td{
+    padding:8px;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f9f9f9;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+<h2>FraudSys</h2>
+<a href="#">Dashboard</a>
+<a href="#">Transactions</a>
+<a href="#">Users</a>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+<div class="top">
+<h2>Dashboard</h2>
+<div>
+<input type="text" placeholder="Search">
+<button>Logout</button>
+</div>
+</div>
+
+<!-- Cards -->
+<div class="cards">
+<div class="card total">
+<h3>Total</h3>
+<h2>{{ total_transactions }}</h2>
+</div>
+
+<div class="card fraud">
+<h3>Fraud</h3>
+<h2>{{ fraud_count }}</h2>
+</div>
+
+<div class="card safe">
+<h3>Safe</h3>
+<h2>{{ safe_count }}</h2>
+</div>
+</div>
+
+<!-- Chart -->
+<div class="chart">
+<canvas id="chart"></canvas>
+</div>
+
+<!-- Table -->
+<table>
+<tr>
+<th>User</th>
+<th>Amount</th>
+<th>Type</th>
+<th>Status</th>
+</tr>
+
+{% for t in transactions %}
+<tr>
+<td>{{ t.user_name }}</td>
+<td>₹ {{ t.amount }}</td>
+<td>{{ t.transaction_type }}</td>
+<td>
+{% if t.is_fraud %}
+Fraud
+{% else %}
+Safe
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+<script>
+new Chart(document.getElementById('chart'),{
+    type:'doughnut',
+    data:{
+        labels:['Fraud','Safe'],
+        datasets:[{
+            data:[{{ fraud_count }},{{ safe_count }}],
+            backgroundColor:['red','green']
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
